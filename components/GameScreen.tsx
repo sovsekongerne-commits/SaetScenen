@@ -95,8 +95,8 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   return (
     <div className="flex flex-col items-center justify-between h-full w-full max-w-6xl mx-auto px-4 py-4 font-sans relative min-h-screen">
       
-      {/* Top Navigation Bar */}
-      <div className="w-full flex flex-wrap justify-between items-center mb-2 gap-4 flex-shrink-0">
+      {/* Top Navigation Bar - Added pr-16 to avoid fullscreen button overlap */}
+      <div className="w-full flex flex-wrap justify-between items-center mb-2 gap-4 flex-shrink-0 pr-16 sm:pr-20">
         <div className="flex items-center gap-4">
           <button 
             onClick={onBack}
