@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Play, ArrowRight, ArrowLeft, Star, Smile, Zap, Crown } from 'lucide-react';
+import { Play, ArrowRight, ArrowLeft, Star, Smile, Zap, Crown, Users, Snowflake, Gavel, Clock } from 'lucide-react';
 import { Team } from '../types';
 import { Button } from './Button';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -7,15 +7,17 @@ import { v4 as uuidv4 } from 'uuid';
 import ReactConfetti from 'react-confetti';
 
 interface SetupScreenProps {
-  onSetupComplete: (teams: Team[], rounds: number) => void;
+  onSetupComplete: (teams: Team[], rounds: number, duration: number) => void;
   onTriggerConfetti: () => void;
 }
 
 enum SetupStep {
   WELCOME = 0,
-  TEAM_COUNT = 1,
-  TEAM_NAMES = 2,
-  ROUND_COUNT = 3
+  RULES = 1,
+  TEAM_COUNT = 2,
+  TEAM_NAMES = 3,
+  ROUND_COUNT = 4,
+  TIME_SELECT = 5
 }
 
 export const SetupScreen: React.FC<SetupScreenProps> = ({ onSetupComplete, onTriggerConfetti }) => {
@@ -25,6 +27,11 @@ export const SetupScreen: React.FC<SetupScreenProps> = ({ onSetupComplete, onTri
   const [roundCount, setRoundCount] = useState<number>(5);
 
   const handleStartClick = () => {
+    onTriggerConfetti();
+    setStep(SetupStep.RULES);
+  };
+
+  const handleRulesNext = () => {
     onTriggerConfetti();
     setStep(SetupStep.TEAM_COUNT);
   };
@@ -54,16 +61,21 @@ export const SetupScreen: React.FC<SetupScreenProps> = ({ onSetupComplete, onTri
   const handleRoundCountSelect = (rounds: number) => {
     onTriggerConfetti();
     setRoundCount(rounds);
-    finishSetup(rounds);
+    setStep(SetupStep.TIME_SELECT);
   };
 
-  const finishSetup = (rounds: number) => {
+  const handleTimeSelect = (seconds: number) => {
+    onTriggerConfetti();
+    finishSetup(roundCount, seconds);
+  };
+
+  const finishSetup = (rounds: number, duration: number) => {
     const teams: Team[] = teamNames.map(name => ({
       id: uuidv4(),
       name: name.trim() || "Navnløst Hold",
       score: 0
     }));
-    onSetupComplete(teams, rounds);
+    onSetupComplete(teams, rounds, duration);
   };
 
   const goBack = () => {
@@ -98,7 +110,7 @@ export const SetupScreen: React.FC<SetupScreenProps> = ({ onSetupComplete, onTri
       {step > 0 && (
         <button 
           onClick={goBack}
-          className="absolute top-8 left-4 md:left-8 flex items-center bg-white border-2 border-black rounded-full px-4 py-2 font-bold shadow-pop hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+          className="absolute top-8 left-4 md:left-8 flex items-center bg-white border-2 border-black rounded-full px-4 py-2 font-bold shadow-pop hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all z-50"
         >
           <ArrowLeft className="w-5 h-5 mr-2" />
           Tilbage
@@ -142,7 +154,80 @@ export const SetupScreen: React.FC<SetupScreenProps> = ({ onSetupComplete, onTri
           </motion.div>
         )}
 
-        {/* STEP 1: TEAM COUNT */}
+        {/* STEP 1: RULES */}
+        {step === SetupStep.RULES && (
+          <motion.div
+            key="rules"
+            variants={variants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            className="w-full max-w-4xl mx-auto text-center"
+          >
+            <div className="mb-8">
+               <div className="bg-white border-4 border-black rounded-3xl p-6 shadow-pop inline-block -rotate-1">
+                  <h2 className="text-4xl font-black text-black">Sådan spiller I! 🤓</h2>
+               </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+              {/* Rule 1 */}
+              <motion.div 
+                whileHover={{ scale: 1.05 }}
+                className="bg-sky-100 border-4 border-black rounded-3xl p-6 shadow-pop flex flex-col items-center"
+              >
+                <div className="bg-white p-4 rounded-full border-2 border-black mb-4 shadow-sm">
+                  <Users className="w-10 h-10 text-sky-500" />
+                </div>
+                <h3 className="text-2xl font-black text-black mb-2 uppercase">1. Lav Scenen</h3>
+                <p className="font-hand font-bold text-lg text-slate-800 leading-tight">
+                  I får et sjovt scenarie. I skal hurtigt skabe det med jeres kroppe!
+                </p>
+              </motion.div>
+
+              {/* Rule 2 */}
+              <motion.div 
+                whileHover={{ scale: 1.05 }}
+                className="bg-yellow-100 border-4 border-black rounded-3xl p-6 shadow-pop flex flex-col items-center rotate-1 md:-rotate-1 z-10"
+              >
+                 <div className="bg-white p-4 rounded-full border-2 border-black mb-4 shadow-sm">
+                  <Snowflake className="w-10 h-10 text-blue-500" />
+                </div>
+                <h3 className="text-2xl font-black text-black mb-2 uppercase">2. FRYS!</h3>
+                <p className="font-hand font-bold text-lg text-slate-800 leading-tight">
+                  Når tiden er gået, skal I stå <span className="font-black uppercase text-xl">HELT STILLE</span> som statuer.
+                </p>
+              </motion.div>
+
+              {/* Rule 3 */}
+              <motion.div 
+                whileHover={{ scale: 1.05 }}
+                className="bg-green-100 border-4 border-black rounded-3xl p-6 shadow-pop flex flex-col items-center"
+              >
+                 <div className="bg-white p-4 rounded-full border-2 border-black mb-4 shadow-sm">
+                  <Gavel className="w-10 h-10 text-green-600" />
+                </div>
+                <h3 className="text-2xl font-black text-black mb-2 uppercase">3. Få Point</h3>
+                <p className="font-hand font-bold text-lg text-slate-800 leading-tight">
+                  Dommeren giver flest point til den sjoveste og mest tydelige scene!
+                </p>
+              </motion.div>
+            </div>
+            
+            <Button 
+              onClick={handleRulesNext} 
+              size="xl" 
+              variant="primary"
+              wiggle={true}
+              className="text-2xl shadow-pop"
+            >
+              Forstået - Videre!
+              <ArrowRight className="w-8 h-8 ml-2" />
+            </Button>
+          </motion.div>
+        )}
+
+        {/* STEP 2: TEAM COUNT */}
         {step === SetupStep.TEAM_COUNT && (
           <motion.div
             key="count"
@@ -174,7 +259,7 @@ export const SetupScreen: React.FC<SetupScreenProps> = ({ onSetupComplete, onTri
           </motion.div>
         )}
 
-        {/* STEP 2: TEAM NAMES */}
+        {/* STEP 3: TEAM NAMES */}
         {step === SetupStep.TEAM_NAMES && (
           <motion.div
             key="names"
@@ -217,7 +302,7 @@ export const SetupScreen: React.FC<SetupScreenProps> = ({ onSetupComplete, onTri
               
               <div className="flex justify-center mt-12">
                 <Button type="submit" size="xl" variant="accent" wiggle className="shadow-pop">
-                  Så kører vi!
+                  Videre!
                   <ArrowRight className="w-8 h-8 ml-2" />
                 </Button>
               </div>
@@ -225,7 +310,7 @@ export const SetupScreen: React.FC<SetupScreenProps> = ({ onSetupComplete, onTri
           </motion.div>
         )}
 
-        {/* STEP 3: ROUND COUNT */}
+        {/* STEP 4: ROUND COUNT */}
         {step === SetupStep.ROUND_COUNT && (
           <motion.div
              key="rounds"
@@ -237,13 +322,13 @@ export const SetupScreen: React.FC<SetupScreenProps> = ({ onSetupComplete, onTri
            >
              <div className="mb-10">
                 <div className="bg-white border-4 border-black rounded-3xl p-6 shadow-pop inline-block -rotate-1">
-                   <h2 className="text-4xl font-black text-black">Hvor længe skal vi lege? ⏱️</h2>
+                   <h2 className="text-4xl font-black text-black">Hvor mange runder? ⏱️</h2>
                 </div>
              </div>
              
              <div className="grid grid-cols-2 gap-6 max-w-2xl mx-auto">
                {[
-                 { count: 3, label: "Lyn-runde", desc: "⚡ Hurtig pause", color: "bg-green-100", icon: <Zap className="w-8 h-8" /> },
+                 { count: 3, label: "Lyn-spil", desc: "⚡ Hurtig pause", color: "bg-green-100", icon: <Zap className="w-8 h-8" /> },
                  { count: 5, label: "Standard", desc: "👍 Helt perfekt", color: "bg-blue-100", icon: <Smile className="w-8 h-8" /> },
                  { count: 8, label: "Lang leg", desc: "⭐ God tid", color: "bg-purple-100", icon: <Star className="w-8 h-8" /> },
                  { count: 12, label: "Marathon", desc: "👑 Det store show", color: "bg-orange-100", icon: <Crown className="w-8 h-8" /> }
@@ -258,6 +343,45 @@ export const SetupScreen: React.FC<SetupScreenProps> = ({ onSetupComplete, onTri
                    <div className="absolute top-4 right-4 text-black opacity-50">{opt.icon}</div>
                    <span className="text-6xl font-black mb-2 text-black">{opt.count}</span>
                    <span className="font-black text-xl uppercase tracking-tight">{opt.label}</span>
+                   <span className="text-sm font-hand font-bold mt-1 text-slate-700">{opt.desc}</span>
+                 </motion.button>
+               ))}
+             </div>
+           </motion.div>
+        )}
+
+        {/* STEP 5: TIME SELECT */}
+        {step === SetupStep.TIME_SELECT && (
+          <motion.div
+             key="time"
+             variants={variants}
+             initial="enter"
+             animate="center"
+             exit="exit"
+             className="w-full max-w-3xl mx-auto text-center"
+           >
+             <div className="mb-10">
+                <div className="bg-white border-4 border-black rounded-3xl p-6 shadow-pop inline-block rotate-1">
+                   <h2 className="text-4xl font-black text-black">Tid pr. scenarie? ⏳</h2>
+                </div>
+             </div>
+             
+             <div className="grid grid-cols-2 gap-6 max-w-2xl mx-auto">
+               {[
+                 { sec: 60, label: "1 Min", desc: "🏎️ Højt tempo", color: "bg-red-100" },
+                 { sec: 120, label: "2 Min", desc: "👌 Standard", color: "bg-yellow-100" },
+                 { sec: 180, label: "3 Min", desc: "🧘 God tid", color: "bg-green-100" },
+                 { sec: 300, label: "5 Min", desc: "🎭 Fordybelse", color: "bg-blue-100" }
+               ].map((opt) => (
+                 <motion.button
+                   key={opt.sec}
+                   whileHover={{ scale: 1.05, rotate: randRot() }}
+                   whileTap={{ scale: 0.95 }}
+                   onClick={() => handleTimeSelect(opt.sec)}
+                   className={`relative border-4 border-black rounded-3xl p-6 shadow-pop hover:shadow-pop-hover flex flex-col items-center justify-center text-left ${opt.color}`}
+                 >
+                   <div className="absolute top-4 right-4 text-black opacity-50"><Clock className="w-8 h-8" /></div>
+                   <span className="text-5xl font-black mb-2 text-black">{opt.label}</span>
                    <span className="text-sm font-hand font-bold mt-1 text-slate-700">{opt.desc}</span>
                  </motion.button>
                ))}

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import ReactConfetti from 'react-confetti';
+import { Maximize, Minimize } from 'lucide-react'; // Import icons
 import { Team, GameState, GameStage } from './types';
 import { SetupScreen } from './components/SetupScreen';
 import { GameScreen } from './components/GameScreen';
@@ -14,21 +15,50 @@ const App: React.FC = () => {
     currentScenario: null,
     history: [],
     roundNumber: 1,
-    totalRounds: 5
+    totalRounds: 5,
+    roundDuration: 120 // Default 2 minutes
   });
+
+  // Fullscreen state
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   // Global Burst State
   const [burstKey, setBurstKey] = useState(0);
+
+  // Listen for fullscreen changes (in case user uses Esc or F11)
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+    };
+  }, []);
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch((err) => {
+        console.error(`Error attempting to enable full-screen mode: ${err.message}`);
+      });
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
+  };
 
   const triggerConfetti = () => {
     setBurstKey(prev => prev + 1);
   };
 
-  const handleSetupComplete = (teams: Team[], rounds: number) => {
+  const handleSetupComplete = (teams: Team[], rounds: number, duration: number) => {
     setGameState(prev => ({
       ...prev,
       teams: teams,
       totalRounds: rounds,
+      roundDuration: duration,
       stage: GameStage.SCENARIO,
       roundNumber: 1,
       currentScenario: null
@@ -86,7 +116,8 @@ const App: React.FC = () => {
       currentScenario: null,
       history: [],
       roundNumber: 1,
-      totalRounds: 5
+      totalRounds: 5,
+      roundDuration: 120
     });
   };
 
@@ -108,6 +139,7 @@ const App: React.FC = () => {
             onFinished={finishRound}
             roundNumber={gameState.roundNumber}
             totalRounds={gameState.totalRounds}
+            roundDuration={gameState.roundDuration}
             onTriggerConfetti={triggerConfetti}
             onBack={restartGame}
           />
@@ -140,6 +172,15 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen text-slate-900 font-sans relative">
       
+      {/* Fullscreen Toggle Button */}
+      <button
+        onClick={toggleFullscreen}
+        className="fixed top-4 right-4 z-50 bg-white text-black border-4 border-black p-3 rounded-xl shadow-pop hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+        title={isFullscreen ? "Afslut fuld skærm" : "Fuld skærm"}
+      >
+        {isFullscreen ? <Minimize className="w-6 h-6" /> : <Maximize className="w-6 h-6" />}
+      </button>
+
       {/* Global Burst Confetti */}
       {burstKey > 0 && (
         <div className="fixed inset-0 pointer-events-none z-[100]">
