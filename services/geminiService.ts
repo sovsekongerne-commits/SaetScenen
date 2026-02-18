@@ -188,7 +188,7 @@ const SCENARIOS = [
 "En bold triller ned ad en stejl bakke mod vejen.",
 "En ven opdager, at nogen har ændret reglerne i spillet.",
 "En lillebror gemmer sig med fjernbetjeningen.",
-"En familie opdager, at nogen har taget den sidste sodavand.",
+"En familie opdager, at nogen har taget den sidste sodavand i køleskabet.",
 "En ven falder i en vandpyt foran de andre.",
 "En familie opdager, at alarmen pludselig går i gang.",
 "En søskende har spist noget, der var gemt til senere.",
