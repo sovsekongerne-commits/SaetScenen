@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Clock, RefreshCw, CheckCircle, Camera, Sparkles, LogOut, Pause, Play, Plus } from 'lucide-react';
+import { RefreshCw, CheckCircle, Pause, Play, Plus, LogOut } from 'lucide-react';
 import { Button } from './Button';
 import { generateScenario } from '../services/geminiService';
 
@@ -93,7 +93,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   };
 
   return (
-    <div className="flex flex-col items-center justify-between h-full w-full max-w-6xl mx-auto px-4 py-4 font-sans relative min-h-screen">
+    <div className="flex flex-col items-center justify-between h-full w-full max-w-7xl mx-auto px-4 py-4 font-sans relative min-h-screen">
       
       {/* Top Navigation Bar - Added pr-16 to avoid fullscreen button overlap */}
       <div className="w-full flex flex-wrap justify-between items-center mb-2 gap-4 flex-shrink-0 pr-16 sm:pr-20">
@@ -142,21 +142,22 @@ export const GameScreen: React.FC<GameScreenProps> = ({
               initial={{ opacity: 0, scale: 0.5, rotate: 10 }}
               animate={{ opacity: 1, scale: 1, rotate: 0 }}
               exit={{ opacity: 0, scale: 1.1 }}
-              className="w-full text-center relative max-w-4xl px-2"
+              className="w-full text-center relative max-w-6xl px-2"
             >
                {/* "Action" Starburst behind text */}
                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] aspect-square max-w-[500px] bg-yellow-300 rounded-full mix-blend-multiply filter blur-3xl opacity-50 z-0 pointer-events-none"></div>
 
               <div className="relative z-10 mb-8 inline-block w-full">
                 <div className="flex justify-center mb-2">
-                    <div className="bg-black text-white px-6 py-2 rounded-full font-bold text-xl uppercase tracking-widest inline-block -rotate-2 border-2 border-white shadow-lg">
+                    <div className="bg-black text-white px-8 py-3 rounded-full font-bold text-2xl uppercase tracking-widest inline-block -rotate-2 border-2 border-white shadow-lg">
                     Opgave:
                     </div>
                 </div>
                 
-                {/* Comic Speech Bubble */}
-                <div className="bg-white border-[6px] border-black p-8 md:p-14 pb-20 md:pb-24 rounded-[40px] md:rounded-[60px] shadow-pop relative min-h-[250px] flex items-center justify-center">
-                   <h1 className="text-4xl md:text-6xl font-black text-black leading-tight drop-shadow-sm font-display break-words w-full">
+                {/* Comic Speech Bubble - Increased min-height and padding */}
+                <div className="bg-white border-[6px] border-black p-10 md:p-16 pb-20 md:pb-24 rounded-[40px] md:rounded-[60px] shadow-pop relative min-h-[400px] flex items-center justify-center">
+                   {/* Increased Font Size */}
+                   <h1 className="text-5xl md:text-7xl font-black text-black leading-tight drop-shadow-sm font-display break-words w-full">
                     "{scenario}"
                    </h1>
                    
@@ -164,39 +165,39 @@ export const GameScreen: React.FC<GameScreenProps> = ({
                    <div className="absolute -bottom-8 left-1/4 -translate-x-1/2 w-0 h-0 border-l-[30px] border-l-transparent border-r-[30px] border-r-transparent border-t-[30px] border-t-black"></div>
                    <div className="absolute -bottom-[26px] left-1/4 -translate-x-1/2 w-0 h-0 border-l-[24px] border-l-transparent border-r-[24px] border-r-transparent border-t-[24px] border-t-white"></div>
 
-                    {/* Timer Display - ABSOLUTE POSITIONED ON CARD */}
+                    {/* Timer Display - ABSOLUTE POSITIONED ON CARD - REDUCED SIZE */}
                     <AnimatePresence>
                     {timeLeft !== null && timeLeft > 0 && (
                         <motion.div 
                             initial={{ scale: 0, rotate: -180 }}
                             animate={{ scale: 1, rotate: 0 }}
                             exit={{ scale: 0 }}
-                            className="absolute -bottom-10 -right-2 md:-bottom-12 md:-right-8 z-30 flex items-end gap-2"
+                            className="absolute -bottom-6 -right-2 md:-bottom-8 md:-right-4 z-30 flex items-end gap-2"
                         >
                             {/* Add Time Button (Smaller) */}
                             <motion.button
                                 whileHover={{ scale: 1.1 }}
                                 whileTap={{ scale: 0.9 }}
                                 onClick={(e) => { e.stopPropagation(); addTime(); }}
-                                className="bg-blue-400 text-white w-14 h-14 rounded-full border-4 border-black flex items-center justify-center shadow-pop hover:bg-blue-500 mb-4"
+                                className="bg-blue-400 text-white w-12 h-12 rounded-full border-4 border-black flex items-center justify-center shadow-pop hover:bg-blue-500 mb-4"
                                 title="Læg 30 sekunder til"
                                 >
-                                <span className="font-black text-sm flex flex-col items-center leading-none">
-                                    <Plus className="w-5 h-5" />
+                                <span className="font-black text-xs flex flex-col items-center leading-none">
+                                    <Plus className="w-4 h-4" />
                                     30s
                                 </span>
                             </motion.button>
 
-                            {/* Main Timer Clock */}
+                            {/* Main Timer Clock - REDUCED SIZE */}
                             <motion.button 
                                 onClick={togglePause}
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
-                                className={`text-white font-black rounded-full border-8 border-black flex flex-col items-center justify-center shadow-pop cursor-pointer hover:shadow-pop-hover transition-all w-32 h-32 md:w-44 md:h-44 ${isPaused ? 'bg-slate-400' : timeLeft <= 10 ? 'bg-red-600 animate-pulse' : 'bg-red-500'}`}
+                                className={`text-white font-black rounded-full border-8 border-black flex flex-col items-center justify-center shadow-pop cursor-pointer hover:shadow-pop-hover transition-all w-24 h-24 md:w-36 md:h-36 ${isPaused ? 'bg-slate-400' : timeLeft <= 10 ? 'bg-red-600 animate-pulse' : 'bg-red-500'}`}
                             >
-                                <span className="text-4xl md:text-6xl">{formatTime(timeLeft)}</span>
-                                <span className="text-sm md:text-lg uppercase tracking-widest opacity-80 flex items-center gap-1">
-                                    {isPaused ? <Play className="w-3 h-3 md:w-4 md:h-4 fill-current" /> : <Pause className="w-3 h-3 md:w-4 md:h-4 fill-current" />}
+                                <span className="text-3xl md:text-5xl">{formatTime(timeLeft)}</span>
+                                <span className="text-xs md:text-sm uppercase tracking-widest opacity-80 flex items-center gap-1">
+                                    {isPaused ? <Play className="w-3 h-3 fill-current" /> : <Pause className="w-3 h-3 fill-current" />}
                                     {isPaused ? "Start" : "Pause"}
                                 </span>
                             </motion.button>
@@ -213,23 +214,34 @@ export const GameScreen: React.FC<GameScreenProps> = ({
                  initial={{ scale: 0.5, opacity: 0 }}
                  animate={{ scale: 1.2, opacity: 1, rotate: [-5, 5, -5, 5, 0] }}
                  exit={{ scale: 0, opacity: 0 }}
-                 className="fixed inset-0 flex flex-col items-center justify-center z-50 bg-black/60 backdrop-blur-sm cursor-pointer"
-                 onClick={() => setTimeLeft(null)}
+                 className="fixed inset-0 flex flex-col items-center justify-center z-50 bg-black/80 backdrop-blur-sm"
                >
-                 <div className="bg-yellow-400 border-8 border-black p-12 transform -rotate-6 shadow-[20px_20px_0px_0px_rgba(0,0,0,1)] mb-8">
+                 <div className="bg-yellow-400 border-8 border-black p-12 transform -rotate-6 shadow-[20px_20px_0px_0px_rgba(0,0,0,1)] mb-12">
                     <h1 className="text-9xl font-black text-black uppercase tracking-tighter">FRYS! 🥶</h1>
                  </div>
                  
-                 <div className="flex flex-col gap-4">
-                    <p className="text-white font-black text-3xl animate-bounce drop-shadow-md bg-black/50 px-6 py-2 rounded-full border-2 border-white text-center">
-                    Tryk her for at fortsætte
-                    </p>
-                    <button 
-                        onClick={(e) => { e.stopPropagation(); addTime(); }}
-                        className="bg-blue-500 hover:bg-blue-600 text-white font-black py-3 px-6 rounded-xl border-4 border-white shadow-lg mx-auto flex items-center gap-2"
+                 <div className="flex flex-col gap-6 w-full max-w-md px-4">
+                    {/* Main Finish Button on Overlay */}
+                    <Button 
+                        variant="success" 
+                        size="xl"
+                        wiggle
+                        onClick={(e) => { e.stopPropagation(); handleFinish(); }}
+                        className="w-full text-2xl animate-bounce-slow shadow-pop-hover border-4"
                     >
-                        <Plus className="w-6 h-6" /> Giv mere tid
-                    </button>
+                        <CheckCircle className="w-8 h-8 mr-2" />
+                        Afslut Runde & Giv Point
+                    </Button>
+
+                    {/* Add Time Button */}
+                    <Button 
+                        variant="secondary"
+                        onClick={(e) => { e.stopPropagation(); addTime(); }}
+                        className="w-full shadow-pop"
+                    >
+                        <Plus className="w-6 h-6 mr-2" />
+                        Vi mangler tid! (+30s)
+                    </Button>
                  </div>
                </motion.div>
               )}
@@ -244,7 +256,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
         <Button 
           variant="ghost" 
           onClick={fetchScenario} 
-          disabled={loading || (timeLeft !== null && timeLeft > 0)}
+          disabled={loading}
           className="w-full bg-white"
         >
           <RefreshCw className="w-6 h-6" />
@@ -258,8 +270,8 @@ export const GameScreen: React.FC<GameScreenProps> = ({
           disabled={loading}
           className="w-full"
         >
-          <Camera className="w-8 h-8" />
-          Se Resultat
+          <CheckCircle className="w-8 h-8" />
+          Afslut Runde
         </Button>
       </div>
     </div>
