@@ -5,6 +5,7 @@ import { Button } from './Button';
 import { motion, AnimatePresence } from 'framer-motion';
 import { v4 as uuidv4 } from 'uuid';
 import ReactConfetti from 'react-confetti';
+import { useAudio } from '../contexts/AudioContext';
 
 interface SetupScreenProps {
   onSetupComplete: (teams: Team[], rounds: number, duration: number) => void;
@@ -25,6 +26,7 @@ export const SetupScreen: React.FC<SetupScreenProps> = ({ onSetupComplete, onTri
   const [teamCount, setTeamCount] = useState<number>(2);
   const [teamNames, setTeamNames] = useState<string[]>(['', '']);
   const [roundCount, setRoundCount] = useState<number>(5);
+  const { playClick } = useAudio();
 
   const handleStartClick = () => {
     onTriggerConfetti();
@@ -37,6 +39,7 @@ export const SetupScreen: React.FC<SetupScreenProps> = ({ onSetupComplete, onTri
   };
 
   const handleTeamCountSelect = (count: number) => {
+    playClick();
     onTriggerConfetti();
     setTeamCount(count);
     const newNames = Array(count).fill('').map((_, i) => teamNames[i] || '');
@@ -59,12 +62,14 @@ export const SetupScreen: React.FC<SetupScreenProps> = ({ onSetupComplete, onTri
   };
 
   const handleRoundCountSelect = (rounds: number) => {
+    playClick();
     onTriggerConfetti();
     setRoundCount(rounds);
     setStep(SetupStep.TIME_SELECT);
   };
 
   const handleTimeSelect = (seconds: number) => {
+    playClick();
     onTriggerConfetti();
     finishSetup(roundCount, seconds);
   };
@@ -79,6 +84,7 @@ export const SetupScreen: React.FC<SetupScreenProps> = ({ onSetupComplete, onTri
   };
 
   const goBack = () => {
+    playClick();
     if (step > 0) setStep(step - 1);
   };
 

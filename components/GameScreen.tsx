@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { RefreshCw, CheckCircle, Pause, Play, Plus, LogOut } from 'lucide-react';
 import { Button } from './Button';
 import { generateScenario } from '../services/geminiService';
+import { useAudio } from '../contexts/AudioContext';
 
 interface GameScreenProps {
   scenario: string | null;
@@ -28,8 +29,10 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   const [loading, setLoading] = useState(false);
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
   const [isPaused, setIsPaused] = useState(false);
+  const { setMusicState } = useAudio();
 
   const fetchScenario = async () => {
+    playClick();
     onTriggerConfetti();
     setLoading(true);
     const newScenario = await generateScenario();
@@ -59,6 +62,15 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   }, []);
 
   useEffect(() => {
+    if (timeLeft === 0) {
+      setMusicState('frozen');
+    } else {
+      setMusicState('menu');
+    }
+    return () => setMusicState('menu');
+  }, [timeLeft, setMusicState]);
+
+  useEffect(() => {
     if (timeLeft === null || timeLeft <= 0 || isPaused) return;
     const timer = setInterval(() => {
       setTimeLeft(prev => (prev !== null ? prev - 1 : null));
@@ -67,19 +79,27 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   }, [timeLeft, isPaused]);
 
   const handleFinish = () => {
+    playClick();
     onTriggerConfetti();
     onFinished();
   }
 
   const togglePause = () => {
+    playClick();
     if (timeLeft !== null && timeLeft > 0) {
       setIsPaused(!isPaused);
     }
   }
 
   const addTime = () => {
+    playClick();
     setTimeLeft(prev => (prev !== null ? prev + 30 : 30));
     setIsPaused(false);
+  };
+
+  const handleBack = () => {
+    playClick();
+    onBack();
   };
 
   // Helper to format time as MM:SS if > 60, otherwise just SS
@@ -99,7 +119,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
       <div className="w-full flex flex-wrap justify-between items-center mb-2 gap-4 flex-shrink-0 pr-16 sm:pr-20">
         <div className="flex items-center gap-4">
           <button 
-            onClick={onBack}
+            onClick={handleBack}
             className="bg-white border-2 border-black rounded-full px-4 py-2 font-bold shadow-pop hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all flex items-center gap-2 text-sm"
           >
             <LogOut className="w-4 h-4" />

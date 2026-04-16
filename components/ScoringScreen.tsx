@@ -4,6 +4,7 @@ import { ArrowRight, Trophy, Star, ThumbsUp, LogOut, Zap } from 'lucide-react';
 import { Team } from '../types';
 import { Button } from './Button';
 import ReactConfetti from 'react-confetti';
+import { useAudio } from '../contexts/AudioContext';
 
 interface ScoringScreenProps {
   teams: Team[];
@@ -24,20 +25,29 @@ export const ScoringScreen: React.FC<ScoringScreenProps> = ({
   onTriggerConfetti,
   onBack
 }) => {
+  const { playClick } = useAudio();
   
   const handleScore = (teamId: string, points: number) => {
+    playClick();
     onTriggerConfetti();
     onUpdateScore(teamId, points);
   }
 
   const handleNext = () => {
+    playClick();
     onTriggerConfetti();
     onNextRound();
   }
 
   const handleEnd = () => {
+    playClick();
     onTriggerConfetti();
     onEndGame();
+  }
+
+  const handleBack = () => {
+    playClick();
+    onBack();
   }
 
   // Determine layout density based on team count
@@ -71,7 +81,7 @@ export const ScoringScreen: React.FC<ScoringScreenProps> = ({
       {/* Top Bar */}
       <div className="flex-shrink-0 w-full flex justify-between items-center mb-2 z-20">
         <button 
-          onClick={onBack}
+          onClick={handleBack}
           className="bg-white border-2 border-black rounded-full px-3 py-1 font-bold shadow-pop hover:shadow-none hover:translate-x-[1px] hover:translate-y-[1px] transition-all flex items-center gap-2 text-xs md:text-sm"
         >
           <LogOut className="w-3 h-3 md:w-4 md:h-4" />

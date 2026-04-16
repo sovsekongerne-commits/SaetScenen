@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion, HTMLMotionProps } from 'framer-motion';
+import { useAudio } from '../contexts/AudioContext';
 
 interface ButtonProps extends HTMLMotionProps<"button"> {
   variant?: 'primary' | 'secondary' | 'accent' | 'danger' | 'ghost' | 'success';
@@ -16,12 +17,23 @@ export const Button: React.FC<ButtonProps> = ({
   isLoading = false,
   wiggle = false,
   disabled,
+  onClick,
   ...props 
 }) => {
+  const { playClick } = useAudio();
   
   // Base style: Thick borders, hard shadow (pop), rounded-xl
   const baseStyle = "font-display font-black rounded-xl border-4 border-black transition-all duration-100 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none active:translate-x-[4px] active:translate-y-[4px] active:shadow-pop-active";
   
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    if (!disabled && !isLoading) {
+      playClick();
+    }
+    if (onClick) {
+      onClick(e);
+    }
+  };
+
   // Variants with bright colors
   const variants = {
     primary: "bg-[#8b5cf6] text-white shadow-pop hover:bg-[#7c3aed]",
@@ -46,6 +58,7 @@ export const Button: React.FC<ButtonProps> = ({
       animate={wiggle ? { rotate: [0, -3, 3, -3, 3, 0], transition: { repeat: Infinity, duration: 2 } } : {}}
       className={`${baseStyle} ${variants[variant]} ${sizes[size]} ${className}`}
       disabled={disabled || isLoading}
+      onClick={handleClick}
       {...props}
     >
       {isLoading ? (

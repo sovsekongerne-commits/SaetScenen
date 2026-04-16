@@ -4,6 +4,7 @@ import { Trophy, RefreshCcw, Crown, Medal } from 'lucide-react';
 import { Team } from '../types';
 import { Button } from './Button';
 import ReactConfetti from 'react-confetti';
+import { useAudio } from '../contexts/AudioContext';
 
 interface WinnerScreenProps {
   teams: Team[];
@@ -15,8 +16,10 @@ export const WinnerScreen: React.FC<WinnerScreenProps> = ({ teams, onRestart, on
   const sortedTeams = [...teams].sort((a, b) => b.score - a.score);
   const winner = sortedTeams[0];
   const isDraw = sortedTeams.length > 1 && sortedTeams[0].score === sortedTeams[1].score;
+  const { playClick } = useAudio();
 
   const handleRestart = () => {
+    playClick();
     onTriggerConfetti();
     onRestart();
   }

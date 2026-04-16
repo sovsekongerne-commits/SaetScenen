@@ -1,14 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import ReactConfetti from 'react-confetti';
-import { Maximize, Minimize } from 'lucide-react'; // Import icons
+import { Maximize, Minimize, Volume2, VolumeX } from 'lucide-react'; // Import icons
 import { Team, GameState, GameStage } from './types';
 import { SetupScreen } from './components/SetupScreen';
 import { GameScreen } from './components/GameScreen';
 import { ScoringScreen } from './components/ScoringScreen';
 import { WinnerScreen } from './components/WinnerScreen';
+import { useAudio } from './contexts/AudioContext';
 
 const App: React.FC = () => {
+  const { volume, setVolume, playClick } = useAudio();
+  const [isMuted, setIsMuted] = useState(false);
+  const [prevVolume, setPrevVolume] = useState(1);
+
+  const toggleMute = () => {
+    playClick();
+    if (isMuted || volume === 0) {
+      setIsMuted(false);
+      setVolume(prevVolume > 0 ? prevVolume : 1);
+    } else {
+      setPrevVolume(volume);
+      setIsMuted(true);
+      setVolume(0);
+    }
+  };
+
   const [gameState, setGameState] = useState<GameState>({
     stage: GameStage.SETUP,
     teams: [],
@@ -38,6 +55,7 @@ const App: React.FC = () => {
   }, []);
 
   const toggleFullscreen = () => {
+    playClick();
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen().catch((err) => {
         console.error(`Error attempting to enable full-screen mode: ${err.message}`);
@@ -172,6 +190,26 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen text-slate-900 font-sans relative">
       
+      {/* Volume Control */}
+      <div className="fixed top-4 right-20 z-50 flex items-center gap-2 bg-white border-4 border-black p-2 rounded-xl shadow-pop hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all">
+        <button onClick={toggleMute} className="text-black" title={isMuted || volume === 0 ? "Slå lyd til" : "Slå lyd fra"}>
+          {isMuted || volume === 0 ? <VolumeX className="w-6 h-6" /> : <Volume2 className="w-6 h-6" />}
+        </button>
+        <input 
+          type="range" 
+          min="0" 
+          max="1" 
+          step="0.01" 
+          value={volume} 
+          onChange={(e) => {
+            const val = parseFloat(e.target.value);
+            setVolume(val);
+            if (val > 0) setIsMuted(false);
+          }} 
+          className="w-20 md:w-24 accent-primary"
+        />
+      </div>
+
       {/* Fullscreen Toggle Button */}
       <button
         onClick={toggleFullscreen}
