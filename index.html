@@ -5,50 +5,9 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sæt Scenen!</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Patrick+Hand&display=swap" rel="stylesheet">
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            fontFamily: {
-              sans: ['Fredoka', 'sans-serif'],
-              hand: ['Patrick Hand', 'cursive'],
-              display: ['Fredoka', 'sans-serif'],
-            },
-            colors: {
-              paper: '#fff1f2',
-              primary: '#8b5cf6',
-              secondary: '#f472b6',
-              accent: '#fbbf24',
-              sky: '#38bdf8',
-              lime: '#a3e635',
-              dark: '#1e293b',
-            },
-            boxShadow: {
-              'pop': '4px 4px 0px 0px rgba(0,0,0,1)',
-              'pop-hover': '6px 6px 0px 0px rgba(0,0,0,1)',
-              'pop-active': '0px 0px 0px 0px rgba(0,0,0,1)',
-            },
-            animation: {
-              'bounce-slow': 'bounce 3s infinite',
-              'wiggle': 'wiggle 1s ease-in-out infinite',
-              'float': 'float 6s ease-in-out infinite',
-            },
-            keyframes: {
-              wiggle: {
-                '0%, 100%': { transform: 'rotate(-3deg)' },
-                '50%': { transform: 'rotate(3deg)' },
-              },
-              float: {
-                '0%, 100%': { transform: 'translateY(0)' },
-                '50%': { transform: 'translateY(-20px)' },
-              }
-            }
-          }
-        }
-      }
-    </script>
+    
     <style>
       body {
         background-color: #fffbeb;
@@ -62,7 +21,7 @@
         box-shadow: 8px 8px 0px 0px rgba(0,0,0,1);
       }
     </style>
-  </head>
+</head>
   <body>
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
