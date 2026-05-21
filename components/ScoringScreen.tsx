@@ -141,11 +141,10 @@ export const ScoringScreen: React.FC<ScoringScreenProps> = ({
                  
                  {/* Bottom: Scoring Buttons */}
                  <div className={`grid grid-cols-3 gap-2 md:gap-3 w-full mt-auto flex-shrink-0 pt-2`}>
-                    
-                    {/* +1 Button */}
+                                      {/* +1 Button */}
                     <button 
                       onClick={() => handleScore(team.id, 1)}
-                      className={`group bg-green-100 hover:bg-green-300 border-b-4 border-r-4 border-black active:border-b-0 active:border-r-0 border-t-2 border-l-2 rounded-2xl transition-all active:translate-y-1 active:translate-x-1 flex flex-col items-center justify-center ${buttonHeightClass}`}
+                      className={`group bg-green-100 hover:bg-green-300 border-4 border-black rounded-2xl transition-all active:translate-y-[4px] active:translate-x-[4px] shadow-pop active:shadow-pop-active flex flex-col items-center justify-center ${buttonHeightClass}`}
                     >
                       <span className={`${buttonTextSize} font-black text-black leading-none mb-1 group-hover:scale-110 transition-transform`}>+1</span>
                       {showDetails && (
@@ -159,7 +158,7 @@ export const ScoringScreen: React.FC<ScoringScreenProps> = ({
                     {/* +3 Button */}
                     <button 
                       onClick={() => handleScore(team.id, 3)}
-                      className={`group bg-blue-100 hover:bg-blue-300 border-b-4 border-r-4 border-black active:border-b-0 active:border-r-0 border-t-2 border-l-2 rounded-2xl transition-all active:translate-y-1 active:translate-x-1 flex flex-col items-center justify-center ${buttonHeightClass}`}
+                      className={`group bg-blue-100 hover:bg-blue-300 border-4 border-black rounded-2xl transition-all active:translate-y-[4px] active:translate-x-[4px] shadow-pop active:shadow-pop-active flex flex-col items-center justify-center ${buttonHeightClass}`}
                     >
                        <span className={`${buttonTextSize} font-black text-black leading-none mb-1 group-hover:scale-110 transition-transform`}>+3</span>
                        {showDetails && (
@@ -167,13 +166,13 @@ export const ScoringScreen: React.FC<ScoringScreenProps> = ({
                               <Zap className={`${isCrowded ? 'w-3 h-3' : 'w-5 h-5'} mb-0.5 text-blue-700 fill-current`} />
                               <span className="text-[10px] md:text-xs font-bold uppercase tracking-wider text-blue-800 hidden md:block">Super</span>
                           </div>
-                      )}
+                       )}
                     </button>
 
                     {/* +5 Button */}
                     <button 
                       onClick={() => handleScore(team.id, 5)}
-                      className={`group bg-purple-100 hover:bg-purple-300 border-b-4 border-r-4 border-black active:border-b-0 active:border-r-0 border-t-2 border-l-2 rounded-2xl transition-all active:translate-y-1 active:translate-x-1 flex flex-col items-center justify-center ${buttonHeightClass}`}
+                      className={`group bg-purple-100 hover:bg-purple-300 border-4 border-black rounded-2xl transition-all active:translate-y-[4px] active:translate-x-[4px] shadow-pop active:shadow-pop-active flex flex-col items-center justify-center ${buttonHeightClass}`}
                     >
                        <span className={`${buttonTextSize} font-black text-black leading-none mb-1 group-hover:scale-110 transition-transform`}>+5</span>
                        {showDetails && (
@@ -181,8 +180,8 @@ export const ScoringScreen: React.FC<ScoringScreenProps> = ({
                               <Trophy className={`${isCrowded ? 'w-3 h-3' : 'w-5 h-5'} mb-0.5 text-purple-700 fill-current`} />
                               <span className="text-[10px] md:text-xs font-bold uppercase tracking-wider text-purple-800 hidden md:block">Episk</span>
                           </div>
-                      )}
-                    </button>
+                       )}
+                     </button>
                  </div>
               </motion.div>
             );

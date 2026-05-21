@@ -1,1 +1,33 @@
 @import "tailwindcss";
+
+@theme {
+  --font-display: "Fredoka", sans-serif;
+  --font-hand: "Patrick Hand", cursive;
+
+  --color-primary: #8b5cf6;
+
+  --shadow-pop: 6px 6px 0px 0px #000000;
+  --shadow-pop-hover: 8px 8px 0px 0px #000000;
+  --shadow-pop-active: 0px 0px 0px 0px #000000;
+
+  --animate-float: float 4s ease-in-out infinite;
+  --animate-bounce-slow: bounce-slow 2s ease-in-out infinite;
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  @keyframes bounce-slow {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
+  }
+}

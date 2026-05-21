@@ -29,7 +29,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   const [loading, setLoading] = useState(false);
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
   const [isPaused, setIsPaused] = useState(false);
-  const { setMusicState } = useAudio();
+  const { setMusicState, playClick } = useAudio();
 
   const fetchScenario = async () => {
     playClick();
