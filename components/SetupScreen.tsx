@@ -10,6 +10,7 @@ import { useAudio } from '../contexts/AudioContext';
 interface SetupScreenProps {
   onSetupComplete: (teams: Team[], rounds: number, duration: number) => void;
   onTriggerConfetti: () => void;
+  onStepChange?: (step: number) => void;
 }
 
 enum SetupStep {
@@ -21,8 +22,14 @@ enum SetupStep {
   TIME_SELECT = 5
 }
 
-export const SetupScreen: React.FC<SetupScreenProps> = ({ onSetupComplete, onTriggerConfetti }) => {
+export const SetupScreen: React.FC<SetupScreenProps> = ({ onSetupComplete, onTriggerConfetti, onStepChange }) => {
   const [step, setStep] = useState<SetupStep>(SetupStep.WELCOME);
+
+  React.useEffect(() => {
+    if (onStepChange) {
+      onStepChange(step);
+    }
+  }, [step, onStepChange]);
   const [teamCount, setTeamCount] = useState<number>(2);
   const [teamNames, setTeamNames] = useState<string[]>(['', '']);
   const [roundCount, setRoundCount] = useState<number>(5);

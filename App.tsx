@@ -1,18 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import ReactConfetti from 'react-confetti';
-import { Maximize, Minimize, Volume2, VolumeX } from 'lucide-react'; // Import icons
+import { Maximize, Minimize, Volume2, VolumeX, Users } from 'lucide-react'; // Import icons
 import { Team, GameState, GameStage } from './types';
 import { SetupScreen } from './components/SetupScreen';
 import { GameScreen } from './components/GameScreen';
 import { ScoringScreen } from './components/ScoringScreen';
 import { WinnerScreen } from './components/WinnerScreen';
 import { useAudio } from './contexts/AudioContext';
+import { GroupManager } from './components/groups/GroupManager';
 
 const App: React.FC = () => {
   const { volume, setVolume, playClick } = useAudio();
   const [isMuted, setIsMuted] = useState(false);
   const [prevVolume, setPrevVolume] = useState(1);
+
+  // KlasseGrupper integration state
+  const [isGroupManagerOpen, setIsGroupManagerOpen] = useState(false);
+  const [setupStep, setSetupStep] = useState(0);
 
   const toggleMute = () => {
     playClick();
@@ -128,6 +133,7 @@ const App: React.FC = () => {
   };
 
   const restartGame = () => {
+    setSetupStep(0);
     setGameState({
       stage: GameStage.SETUP,
       teams: [],
@@ -147,6 +153,7 @@ const App: React.FC = () => {
           <SetupScreen 
             onSetupComplete={handleSetupComplete}
             onTriggerConfetti={triggerConfetti}
+            onStepChange={setSetupStep}
           />
         );
       case GameStage.SCENARIO:
@@ -249,6 +256,64 @@ const App: React.FC = () => {
       <main className="relative z-10 min-h-screen flex flex-col">
         {renderStage()}
       </main>
+
+      {/* KlasseGrupper Integration */}
+      <GroupManager isOpen={isGroupManagerOpen} onClose={() => setIsGroupManagerOpen(false)} />
+
+      {/* KlasseGrupper Dual-Scale Triggers */}
+      {gameState.stage === GameStage.SETUP && setupStep === 0 ? (
+        <>
+          {/* Playful Pointer Arrow and Text */}
+          <div 
+            className="fixed bottom-24 right-8 z-[80] select-none pointer-events-none flex flex-col items-end animate-wiggle"
+            style={{ animationDuration: '3s' }}
+          >
+            <div className="bg-[#fbbf24] text-slate-900 font-black text-sm px-3.5 py-1.5 rounded-full shadow-lg border-2 border-white rotate-[-4deg] tracking-wide flex items-center gap-1">
+              <span>✨ Lav grupper her!</span>
+            </div>
+            <svg 
+              width="40" 
+              height="40" 
+              viewBox="0 0 40 40" 
+              fill="none" 
+              className="text-[#fbbf24] stroke-current stroke-[3] drop-shadow-md mt-1 mr-10 translate-x-4"
+            >
+              <path 
+                d="M10 5 Q 22 8, 25 25" 
+                strokeLinecap="round" 
+              />
+              <path 
+                d="M18 20 L 25 25 L 28 17" 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+              />
+            </svg>
+          </div>
+          {/* Stor, legende lilla 3D-knap */}
+          <button
+            onClick={() => {
+              playClick();
+              setIsGroupManagerOpen(true);
+            }}
+            className="fixed bottom-6 right-6 z-[90] bg-[#8b5cf6] hover:bg-[#7c3aed] text-white py-4 px-6 rounded-2xl shadow-[0_6px_0_#6d28d9] active:translate-y-[4px] active:shadow-[0_2px_0_#6d28d9] border-4 border-[#f5f3ff] font-black flex items-center gap-2 group cursor-pointer transition-all animate-float text-base sm:text-lg select-none"
+          >
+            <Users className="w-5 h-5 group-hover:scale-110 transition-transform" fill="currentColor" />
+            <span>Grupper 👥</span>
+          </button>
+        </>
+      ) : (
+        /* Lille diskret cirkelknap */
+        <button
+          onClick={() => {
+            playClick();
+            setIsGroupManagerOpen(true);
+          }}
+          className="fixed bottom-6 right-6 z-[90] bg-[#8b5cf6] hover:bg-[#7c3aed] text-white w-12 h-12 rounded-full shadow-[0_4px_0_#6d28d9] active:translate-y-[2px] active:shadow-[0_1px_0_#6d28d9] border-2 border-white/80 flex items-center justify-center group cursor-pointer transition-all hover:scale-105 select-none"
+          title="Vis Grupper 👥"
+        >
+          <Users size={20} fill="currentColor" />
+        </button>
+      )}
     </div>
   );
 };
